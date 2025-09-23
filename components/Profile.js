@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {  View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Platform, StatusBar, ScrollView  } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';

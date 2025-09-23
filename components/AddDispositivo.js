@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, StatusBar, Platform, TouchableOpacity } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -11,7 +10,7 @@ export default function PerformanceScreen({navigation}) {
     <SafeAreaView style={styles.container}>
       <View style={styles.whitecard}>
         <View style={{flexDirection:'row', alignItems:'center'}}>
-        <AntDesign name="loading1" size={20} color="#B8B8B8" />
+        <MaterialCommunityIcons name="loading" size={20} color="#B8B8B8" />
         <Text style={styles.loading}>Procurando por dispositivos...</Text>
         </View>
       </View>

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "hydrignis",
-    "slug": "snack-227cf2ea-b640-40f6-85ff-be741227cf5b",
+    "name": "hydrignis-app",
+    "slug": "hydrignis-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,6 +24,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

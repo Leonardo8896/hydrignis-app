@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Platform, StatusBar, Dimensions, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
 import { LineChart, Grid, XAxis, AreaChart } from "react-native-svg-charts";
+import Feather from '@expo/vector-icons/Feather';
 
 export default function PerformanceScreen() {
   const data = [10, 30, 50, 75, 40, 30, 40, 38, 95, 70, 40, 55];
@@ -37,7 +37,7 @@ export default function PerformanceScreen() {
 
       <View style={styles.whitecard}>
         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around'}}>
-          <AntDesign name="checkcircle" size={20} color="#68d391" />
+          <Feather name="check-circle" size={20} color="#68d391" />
           <Text style={{fontFamily:'Inter-regular', fontSize:13, color:'#000000'}}>Todos os dispositivos estão bem conservados</Text>
         </View>
       

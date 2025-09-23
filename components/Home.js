@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Platform, StatusBar, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Feather from '@expo/vector-icons/Feather';
 
 export default function HomeScreen({navigation}) {
   const [sefPowerOn, setSefPowerOn] = useState(true);
@@ -34,7 +34,7 @@ export default function HomeScreen({navigation}) {
             <View style={{ backgroundColor: 'white', borderRadius: 24, borderWidth: 1, borderColor: '#e4e4e4',
              width: 40, height: 40,
             justifyContent:'center', alignItems: 'center', marginRight:8 }}>
-              <AntDesign name="plus" size={24} color="black" />
+              <Feather name="plus" size={24} color="black" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Notificacao')}>

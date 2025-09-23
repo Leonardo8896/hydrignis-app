@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Platform, StatusBar, Dimensions, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -322,7 +321,7 @@ export default function HomeScreen() {
                 <Text style={{fontFamily:'Inter-regular', color:'#939393', fontSize:9}}>Incompleto</Text>
               </View>
               <View style={{marginLeft:6}}>
-              <AntDesign name="checkcircle" size={16} color="#68d391" />
+              <Feather name="check-circle" size={16} color="#68d391" />
               </View>
             </View>
 
@@ -332,7 +331,7 @@ export default function HomeScreen() {
                 <Text style={{fontFamily:'Inter-regular', color:'#939393', fontSize:9}}>Contém Líquido</Text>
               </View>
               <View style={{marginLeft:6}}>
-              <AntDesign name="checkcircle" size={16} color="#68d391" />
+              <Feather name="check-circle" size={16} color="#68d391" />
               </View>
             </View>
           </View>

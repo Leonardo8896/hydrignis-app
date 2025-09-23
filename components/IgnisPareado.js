@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Platform, StatusBar, Image, TouchableOpacity } from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
 
 export default function PerformanceScreen({navigation}) {
   return (
@@ -16,7 +16,7 @@ export default function PerformanceScreen({navigation}) {
       <TouchableOpacity onPress={() => navigation.navigate('FinalizarCadastroIgnis')}>
       <View style={styles.botao}>
       <Text style={{fontFamily:'Inter-regular', color:'white'}}>Prosseguir</Text>
-      <AntDesign name="arrowright" size={20} color="white" style={{marginLeft:8}}/>
+      <Feather name="arrow-right" size={20} color="white" style={{marginLeft:8}}/>
       </View>
       </TouchableOpacity>
     </SafeAreaView>
