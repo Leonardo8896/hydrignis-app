@@ -1,14 +1,33 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Platform, StatusBar, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Feather from '@expo/vector-icons/Feather';
+import * as TokenService from '../services/token';
+import { getDevices } from '../services/devices';
 
 export default function HomeScreen({navigation}) {
   const [sefPowerOn, setSefPowerOn] = useState(true);
   const [ignisPowerOn, setIgnisPowerOn] = useState(true);
+  const [userName, setUserName] = useState('Carregando...');
+
+  // useEffect(()=>{
+  //   (async () => {
+  //     const token = await TokenService.getToken();
+  //     const devices = await getDevices(token);
+  //     return null;
+  //   })
+
+  // })
+
+  (async () => {
+      const token = await TokenService.getToken();
+      const devices = await getDevices(token);
+      setUserName(devices["user"]["username"]);
+      
+  })
 
   const toggleSefPower = () => {
     setSefPowerOn(!sefPowerOn);
@@ -26,8 +45,8 @@ export default function HomeScreen({navigation}) {
           style={styles.img}
         />
         <View style={styles.viewdetexto}>
-          <Text style={styles.noite}>Boa Noite</Text>
-          <Text style={styles.nameuser}>Murilo Haddad</Text>
+          <Text style={styles.noite}>Olá,</Text>
+          <Text style={styles.nameuser}>{userName}</Text>
         </View>
         <View style={styles.rightheader}>
           <TouchableOpacity onPress={() => navigation.navigate('AddDispositivo')}>
