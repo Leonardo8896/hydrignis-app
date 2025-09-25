@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, Switch, StatusBar, Platform } from 'react-native';
+import { login } from '../services/login';
 
 export default function App({navigation}) {
   const [activeTab, setActiveTab] = useState('login'); 
@@ -95,7 +96,7 @@ export default function App({navigation}) {
               styles.submitButton,
               activeTab === 'login' ? styles.submitButtonLogin : styles.submitButtonCadastro
             ]} 
-            onPress={() => navigation.navigate('MainTabs')}>
+            onPress={() => login(email, password, navigation)}>
             <Text style={styles.submitButtonText}>
               {activeTab === 'login' ? 'Entrar' : 'Cadastrar'}
             </Text>
