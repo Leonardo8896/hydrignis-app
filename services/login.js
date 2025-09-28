@@ -1,8 +1,9 @@
-import * as TokenService from '../services/token';
+import { ENV } from '../env';
+import TokenService from '../services/token';
 
-const api_adress = "https://exemptible-odilia-sorely.ngrok-free.dev"
+const api_adress = ENV.API_ADDRESS;
 
-export async function login(email, password, navigation) {
+export async function login(email, password, navigation, rememberMe) {
     try {
         const response = await fetch(`${api_adress}/account/login`, {
             method: "POST",
@@ -16,11 +17,15 @@ export async function login(email, password, navigation) {
         })
         // console.log(response);
         const json = await response.json();
+        console.log(json);
         if (response.status === 401) {
             alert("Email ou senha incorretos.");
             return null;
         } else if (response.status === 200) {
             // alert("Login realizado com sucesso!");
+            if(rememberMe) {
+                await TokenService.saveItem("rememberMe", "true")
+            }
             await TokenService.saveToken(json["Session-token"]);
             navigation.navigate('MainTabs', {
                 screen: 'HomeStack',

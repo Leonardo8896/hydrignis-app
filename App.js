@@ -38,6 +38,10 @@ import EditarNomeHydralize from "./components/EditarNomeHydralize";
 import EditarLocalizacaoHydralize from "./components/EditarLocalizacaoHydralize";
 import EditarNomeIgnis from "./components/EditarNomeIgnis";
 import EditarLocalizacaoIgnis from "./components/EditarLocalizacaoIgnis";
+import { initWebSocket } from "./hooks/websocket";
+import { ENV } from "./env";
+import ClientSecureStorage from "./services/token";
+import TokenService from "./services/token";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -667,6 +671,7 @@ function MainTabs() {
 }
 
 export default function App() {
+  console.log(ENV);
   const [fontLoaded, setFontLoaded] = useState(false);
 
   useEffect(() => {
@@ -679,6 +684,16 @@ export default function App() {
     }
     loadFont();
   }, []);
+
+  useEffect(() => {
+    async function checkRememberMe(){
+      const result = await TokenService.getItem("rememberMe");
+      if(result.toLocaleLowerCase() == "true") {
+
+      }
+    }
+    checkRememberMe();
+  }, [])
 
   if (!fontLoaded) {
     return (

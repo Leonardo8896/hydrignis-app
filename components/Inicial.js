@@ -9,9 +9,9 @@ import {
   Platform,
   StatusBar,
 } from "react-native";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import Feather from '@expo/vector-icons/Feather';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Feather from "@expo/vector-icons/Feather";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const WelcomeScreen = ({ navigation }) => {
   return (
@@ -43,6 +43,21 @@ const WelcomeScreen = ({ navigation }) => {
           <Text style={styles.signupButtonText}>Novo usuário? Cadastre-se</Text>
           <Feather name="arrow-right" size={16} color="white" />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.signupButton}
+          onPress={() =>
+            navigation.navigate("MainTabs", {
+              screen: "HomeStack",
+              params: { screen: "Home" },
+            })
+          }
+        >
+          <Ionicons name="person-add" size={20} color="white" />
+          <Text style={styles.signupButtonText}>Iniciar como Visitante</Text>
+          <Feather name="arrow-right" size={16} color="white" />
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate("Privacidade")}>
           <Text style={styles.politica}>Políticas de Privacidade</Text>
         </TouchableOpacity>

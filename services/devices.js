@@ -1,4 +1,6 @@
-const api_adress = "https://exemptible-odilia-sorely.ngrok-free.dev"
+import { ENV } from '../env';
+
+const api_adress = ENV.WS_SERVER;
 
 export async function getDevices(token) {
     try {
@@ -7,14 +9,10 @@ export async function getDevices(token) {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-                name: name
-            })
+            }
         })
-        // console.log(response);
+        console.log(`Response status: ${response.status}`);
+        //console.log(`Response: ${response.text()}`);
         const json = await response.json();
         if (response.status === 401) {
             alert(json["error"]);
