@@ -26,9 +26,18 @@ import Feather from "@expo/vector-icons/Feather";
 import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
 import { LineChart, Grid, XAxis, AreaChart } from "react-native-svg-charts";
 import eventBus from "../events";
+import WaterProgress from "./graphics/percent";
 
 function getRandomNumber(min = 0, max = 100) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function waterBox(text, iconName) {
+  return (
+    <View style={{ marginLeft: 6 }}>
+      <Feather name="check-circle" size={16} color="#68d391" />
+    </View>
+  );
 }
 
 export default function HomeScreen() {
@@ -40,6 +49,13 @@ export default function HomeScreen() {
 
   const [waterInputData, setWaterInputData] = useState(0);
   const [batteryInputData, setBatteryInputData] = useState(0);
+  const [hasCloro, setHasCloro] = useState(false);
+  const [hasWater, setHasWater] = useState(false);
+  const [currentEnergy, setCurrentEnergy] = useState(0);
+  const [waterIn, setWaterIn] = useState(9);
+  const [waterOut, setWaterOut] = useState(0);
+
+  const max = 10;
 
   useEffect(() => {
     function handleUpdate(data) {
@@ -49,6 +65,11 @@ export default function HomeScreen() {
       } else {
         setBatteryInputData(body.battery);
       }
+      setHasCloro(body.hasCloro || 1);
+
+      setWaterIn(body.waterIn || 2);
+      setWaterOut(body.waterOut || 2);
+      setHasWater(body.hasWater ? true : false);
     }
     eventBus.on("hydralize", handleUpdate);
     return () => {
@@ -141,13 +162,14 @@ export default function HomeScreen() {
           {showBattery && (
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-around",
+                flexDirection: "column",
                 paddingHorizontal: 20,
                 marginTop: 5,
+                //borderWidth: 1,
+                //alignItems: "center"
               }}
             >
-              <View style={styles.chartWrapper}>
+              <View style={[styles.chartWrapper]}>
                 <Text style={styles.chartTitle}>Nível da Bateria</Text>
                 <View style={styles.chartContainer}>
                   <PieChart
@@ -169,13 +191,13 @@ export default function HomeScreen() {
                     </Text>
                   </View>
                   <Text style={styles.grayPercentage}>Carregando...</Text>
-                  <Text style={styles.lightgrayPercentage}>
+                  {/*                   <Text style={styles.lightgrayPercentage}>
                     (40min até o término)
-                  </Text>
+                  </Text> */}
                 </View>
               </View>
 
-              <View style={styles.barContainer}>
+              {/*               <View style={styles.barContainer}>
                 <Text style={styles.chartTitle2}>Uso de energia</Text>
                 <View style={styles.barChart}>
                   {barData.map((value, index) => (
@@ -193,7 +215,7 @@ export default function HomeScreen() {
                     </View>
                   ))}
                 </View>
-              </View>
+              </View> */}
             </View>
           )}
         </View>
@@ -215,7 +237,7 @@ export default function HomeScreen() {
 
           {showWater && (
             <View style={styles.conteudo}>
-              <View style={styles.subcabecalho}>
+              {/*               <View style={styles.subcabecalho}>
                 <Text style={styles.subtitulo}>Geração de Água Semanal</Text>
                 <Text style={styles.semana}>Essa semana</Text>
               </View>
@@ -244,7 +266,9 @@ export default function HomeScreen() {
                     </LinearGradient>
                   </View>
                 </View>
-              ))}
+              ))} */}
+              <WaterProgress value={waterIn} max={max} label={"Não filtrada"} />
+              <WaterProgress value={waterOut} max={max} label={"Filtrada"} />
             </View>
           )}
         </View>
@@ -266,7 +290,7 @@ export default function HomeScreen() {
           {showEnergy && (
             <View style={styles.corpo3}>
               <View style={styles.gaugeContainer3}>
-                <Text style={styles.totalTitulo4}>Energia gerada agora</Text>
+                <Text style={styles.totalTitulo4}>Tensão da placa solar</Text>
                 <Svg height="100" width="120" viewBox="0 0 120 60">
                   <G rotation="-120" origin="60,60">
                     <Circle
@@ -292,79 +316,9 @@ export default function HomeScreen() {
                     />
                   </G>
                 </Svg>
-                <Text style={styles.textoenergia}>{energiaAtual}W</Text>
-                <Text style={styles.subGauge3}>
-                  Energia gerada pela célula solar...
-                </Text>
+                <Text style={styles.textoenergia}>{energiaAtual}V</Text>
+                <Text style={styles.subGauge3}>...</Text>
               </View>
-
-              <View style={styles.totalContainer3}>
-                <Text style={styles.totalTitulo3}>Total gerado hoje</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: 4,
-                  }}
-                >
-                  <Text style={styles.valorHoje3}>
-                    20W{" "}
-                    <Ionicons
-                      name="arrow-up"
-                      size={14}
-                      color="#FFD700"
-                      style={{ marginLeft: 1, marginTop: 1 }}
-                    />
-                  </Text>
-                </View>
-
-                <Text style={styles.previsaoTexto3}>Previsão: 40W</Text>
-                <LinearGradient
-                  colors={["#fff200", "#fff0"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.grafico3}
-                >
-                  <View style={styles.pontoFinal3} />
-                </LinearGradient>
-              </View>
-            </View>
-          )}
-
-          {showEnergy && (
-            <View style={styles.conteudo4}>
-              <View style={styles.subcabecalho}>
-                <Text style={styles.subtitulo}>
-                  Geração de Produção Semanal
-                </Text>
-                <Text style={styles.semana}>Essa semana</Text>
-              </View>
-
-              <AreaChart
-                style={{ height: 160 }}
-                data={dados2}
-                svg={{ fill: "rgba(255, 215, 0, 0.3)" }}
-                contentInset={{ top: 20, bottom: 30 }}
-              >
-                <Grid svg={{ stroke: "#eee" }} />
-              </AreaChart>
-
-              <LineChart
-                style={StyleSheet.absoluteFill}
-                data={dados2}
-                svg={{ stroke: "#FFCF00", strokeWidth: 2 }}
-                contentInset={{ top: 50, bottom: 60 }}
-              >
-                <Pontos />
-              </LineChart>
-
-              <XAxis
-                style={{ marginHorizontal: -10, height: 25, marginTop: 10 }}
-                data={dados2}
-                formatLabel={(value, index) => dias[index]}
-                contentInset={{ left: 25, right: 25 }}
-                svg={{ fontSize: 11, fill: "#555" }}
-              />
             </View>
           )}
         </View>
@@ -405,12 +359,18 @@ export default function HomeScreen() {
                       fontSize: 9,
                     }}
                   >
-                    Incompleto
+                    {hasWater ? "Completo" : "Incompleto"}
                   </Text>
                 </View>
-                <View style={{ marginLeft: 6 }}>
-                  <Feather name="check-circle" size={16} color="#68d391" />
-                </View>
+                {(hasWater == 1 && (
+                  <View style={{ marginLeft: 6 }}>
+                    <Feather name="check-circle" size={16} color="#68d391" />
+                  </View>
+                )) || (
+                  <View style={{ marginLeft: 6 }}>
+                    <Feather name="x" size={16} color="#e82121ff" />
+                  </View>
+                )}
               </View>
 
               <View style={styles.caixacinza2}>
@@ -432,12 +392,18 @@ export default function HomeScreen() {
                       fontSize: 9,
                     }}
                   >
-                    Contém Líquido
+                    {hasCloro == 1 ? "Completo" : "Incompleto"}
                   </Text>
                 </View>
-                <View style={{ marginLeft: 6 }}>
-                  <Feather name="check-circle" size={16} color="#68d391" />
-                </View>
+                {(hasCloro == 1 && (
+                  <View style={{ marginLeft: 6 }}>
+                    <Feather name="check-circle" size={16} color="#68d391" />
+                  </View>
+                )) || (
+                  <View style={{ marginLeft: 6 }}>
+                    <Feather name="x" size={16} color="#e82121ff" />
+                  </View>
+                )}
               </View>
             </View>
             <Image
@@ -521,6 +487,7 @@ const styles = StyleSheet.create({
   },
   chartWrapper: {
     marginTop: 12,
+    width: 90,
   },
   chartTitle: {
     fontFamily: "inter-regular",
@@ -587,6 +554,9 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginLeft: 20,
     marginRight: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   subcabecalho: {
     flexDirection: "row",
