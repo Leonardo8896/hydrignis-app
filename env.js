@@ -11,4 +11,6 @@ const envSchema = z.object({
 
 ENV = envSchema.parse( { API_ADDRESS, WS_SERVER });
 
+ENV.WS_SERVER = "wss://exemptible-odilia-sorely.ngrok-free.dev/"
+
 export { ENV }
