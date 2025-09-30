@@ -31,16 +31,18 @@ export default function HomeScreen({ navigation }) {
         // console.log("[HomeScreen] effect start");
         const token = await TokenService.getToken();
         console.log(token);
+        /* console.log(token);
         console.log(token);
         const devices = await getDevices(token);
-        console.log("[HomeScreen] devices:", devices);
-        // exemplo: refletir na UI pra ver que executou
-        if (devices && devices.user && devices.user.name) {
+        console.log("[HomeScreen] devices:", devices); */
+        
+/*         if (devices && devices.user && devices.user.name) {
           setUserName(devices.user.name);
         } else {
           setUserName("Visitante");
-        }
+        } */
 
+        // O CLIENTE WEBSOCKET INICIALIZA GLOBALMENTE
         const wsClient = initWebSocket(ENV.WS_SERVER, token);
         
       } catch (err) {
