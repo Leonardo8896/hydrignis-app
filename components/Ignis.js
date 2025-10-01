@@ -146,86 +146,12 @@ const BarGraph = () => {
 
         {showCam && (
           <View style={styles.bodywhitecard2}>
-            <View style={{ flexDirection: "column", alignItems: "center" }}>
+            <View style={{ flexDirection: "column", alignItems: "center", height: 200, width: 300, margin: 30 }}>
               <CameraView temps={cameraViewData}/>
               <Image
                 source={require("../assets/barrargb.png")}
                 style={styles.img2}
               />
-            </View>
-
-            <View style={styles.ladodois}>
-              <View style={styles.coluna1}>
-                <Text
-                  style={{
-                    color: "white",
-                    fontWeight: "bold",
-                    fontFamily: "Inter-regular",
-                    fontSize: 19,
-                  }}
-                >
-                  70%
-                </Text>
-                <Text
-                  style={{
-                    color: "#9FA1B1",
-                    fontFamily: "Inter-regular",
-                    fontSize: 10,
-                    width: 80,
-                    textAlign: "center",
-                  }}
-                >
-                  Temperatura Baixa
-                </Text>
-              </View>
-
-              <View style={styles.coluna2}>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontFamily: "Inter-regular",
-                    color: "black",
-                    fontSize: 19,
-                  }}
-                >
-                  20%
-                </Text>
-                <Text
-                  style={{
-                    color: "#666",
-                    fontFamily: "Inter-regular",
-                    fontSize: 10,
-                    width: 80,
-                    textAlign: "center",
-                  }}
-                >
-                  Temperatura Média
-                </Text>
-              </View>
-
-              <View style={styles.coluna3}>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontFamily: "Inter-regular",
-                    color: "black",
-                    fontSize: 19,
-                  }}
-                >
-                  10%
-                </Text>
-                <Text
-                  style={{
-                    color: "#666",
-                    fontFamily: "Inter-regular",
-                    fontSize: 10,
-                    width: 70,
-                    textAlign: "center",
-                  }}
-                >
-                  Temperatura Alta
-                </Text>
-              </View>
             </View>
           </View>
         )}
@@ -268,10 +194,9 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     borderWidth: 1,
     borderColor: "#B8B8B8",
-    paddingVertical: 3,
     borderRadius: 10,
     marginTop: 12,
-    paddingBottom: 16,
+    //maxHeight: 300
   },
   titulocategoria: {
     fontFamily: "Inter-regular",
@@ -310,10 +235,10 @@ const styles = StyleSheet.create({
   },
   bodywhitecard2: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 12,
     paddingHorizontal: 10,
-    alignItems: "center",
   },
   img2: {
     width: 150,

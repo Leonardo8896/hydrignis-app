@@ -34,26 +34,32 @@ export default function CameraView({ temps }) {
       g = verde[1]
       b = verde[2]
     }
-    else if (temp <= 50)
+    else if (temp <= 35)
     {
       let prop = (temp - 15) / (35 - 15)
       r = (verde[0] + prop * (amarelo[0] - verde[0]))
       g = (verde[1] + prop * (amarelo[1] - verde[1]))
       b = (verde[2] + prop * (amarelo[2] - verde[2]))
     }
-    else if (temp <= 100)
+    else if (temp <= 50)
     {
       let prop = (temp - 35) / (50 - 35)
       r = (amarelo[0] + prop * (laranja[0] - amarelo[0]))
       g = (amarelo[1] + prop * (laranja[1] - amarelo[1]))
       b = (amarelo[2] + prop * (laranja[2] - amarelo[2]))
     }
-    else
+    else if (temp <= 100)
     {
       let prop = (temp - 50) / (100 - 50)
       r = (laranja[0] + prop * (vermelho[0] - laranja[0]))
       g = (laranja[1] + prop * (vermelho[1] - laranja[1]))
       b = (laranja[2] + prop * (vermelho[2] - laranja[2]))
+    }
+    else
+    {
+      r = vermelho[0]
+      g = vermelho[1]
+      b = vermelho[2]
     }
     
     return {
@@ -65,7 +71,7 @@ export default function CameraView({ temps }) {
   };
 
   return (
-      <Svg height="50%" width="50%">
+      <Svg height="100%" width="100%" style={{borderWidth: 1}}>
         {temps.map(temp => ({ ...temperatureToRGB(temp) })).map((item, index) => (
           <Rect
             key={index}

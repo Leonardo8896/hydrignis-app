@@ -1,7 +1,5 @@
-import { EventEmitter } from "expo";
-
+// ws.js (ou o nome do seu módulo)
 import eventBus from "../events";
-// ...dentro do onmessage...
 
 let wsClient = null;
 
@@ -18,38 +16,46 @@ function initWebSocket(url, auth_token) {
   console.log("[WebSocket] initWebSocket called");
   console.log("[WebSocket] URL:", url);
   console.log("[WebSocket] auth_token:", auth_token);
+
   const urlTemplate = `${url}?token=${auth_token}`;
   console.log("[WebSocket] Full URL:", urlTemplate);
-  if (!wsClient) {
-    wsClient = new WebSocket(urlTemplate);
 
-    wsClient.onopen = () => {
-      console.log("✅ WebSocket conectado!");
-    };
-
-    wsClient.onmessage = (event) => {
-      //console.log("📩 Mensagem recebida:", event.data);
-      const body = parseJsonString(event.data);
-      //console.log(`WS:[BODY] ${event.data}`);
-      if (body.Camera == undefined) {
-        console.log("Recebido evento HYDRALIZE");
-        eventBus.emit("hydralize", event.data);
-      } else {
-        console.log("Recebido evento IGNIS");
-        eventBus.emit("ignis", event.data);
-      }
-    };
-
-    wsClient.onerror = (err) => {
-      console.error("❌ Erro WebSocket:", err.message);
-      console.log(err);
-    };
-
-    wsClient.onclose = () => {
-      console.log("🔌 WebSocket fechado");
-      wsClient = null; // libera para reconectar se precisar
-    };
+  // Evita criar múltiplas instâncias
+  if (wsClient && (wsClient.readyState === WebSocket.OPEN || wsClient.readyState === WebSocket.CONNECTING)) {
+    console.log("[WebSocket] já existe uma conexão ativa/conectando; reutilizando");
+    return wsClient;
   }
+
+  wsClient = new WebSocket(urlTemplate);
+
+  wsClient.onopen = () => {
+    console.log("✅ WebSocket conectado!");
+  };
+
+  wsClient.onmessage = (event) => {
+    const body = parseJsonString(event.data);
+    if (!body) return;
+
+    if (body.Camera === undefined) {
+      console.log("Recebido evento HYDRALIZE");
+      eventBus.emit("hydralize", event.data);
+    } else {
+      console.log("Recebido evento IGNIS");
+      eventBus.emit("ignis", event.data);
+    }
+  };
+
+  wsClient.onerror = (err) => {
+    // Em RN, err.message pode não existir; logue o objeto inteiro também
+    console.error("❌ Erro WebSocket:", err?.message || err);
+    console.log(err);
+  };
+
+  wsClient.onclose = () => {
+    console.log("🔌 WebSocket fechado");
+    wsClient = null; // libera para reconectar se precisar
+  };
+
   return wsClient;
 }
 
@@ -57,4 +63,4 @@ function getWsClient() {
   return wsClient;
 }
 
-export { wsClient, initWebSocket, getWsClient };
+export { initWebSocket, getWsClient };

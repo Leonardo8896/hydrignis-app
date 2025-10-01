@@ -268,7 +268,7 @@ export default function HomeScreen() {
                 </View>
               ))} */}
               <WaterProgress value={waterIn} max={max} label={"Não filtrada"} />
-              <WaterProgress value={waterOut} max={max} label={"Filtrada"} />
+  
             </View>
           )}
         </View>
