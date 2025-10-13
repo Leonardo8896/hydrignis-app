@@ -24,23 +24,172 @@ export default function HomeScreen({ navigation }) {
   const [sefPowerOn, setSefPowerOn] = useState(true);
   const [ignisPowerOn, setIgnisPowerOn] = useState(true);
   const [userName, setUserName] = useState("Carregando...");
+  const [deviceCards, setDeviceCards] = useState();
+
+  const loadCards = (devices) => {
+    const cards = []
+
+    devices.forEach(device => {
+        if (device["type"] === "igniszero") {
+            cards.push(
+                <View style={[styles.whitecard, !ignisPowerOn && styles.disabledCard]}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Ignis', {serial_number: device["serial_number"]})}>
+                    <View style={styles.topcard}>
+                        <View style={styles.rowtopcard}>
+                        <MaterialCommunityIcons name="fire" size={24} color={ignisPowerOn ? "#AD2831" : "#cccccc"} />
+                        <Text style={[styles.nomedispositivo, !ignisPowerOn && styles.disabledText]}>{device.name}</Text>
+                        </View>
+                        <TouchableOpacity onPress={toggleIgnisPower}>
+                        <View style={[styles.powerButton, !ignisPowerOn && styles.powerButtonOff]}>
+                            <MaterialCommunityIcons name="power" size={18} color={ignisPowerOn ? "#006ED3" : "#cccccc"} />
+                        </View>
+                        </TouchableOpacity>
+                    </View>
+            
+                    <View style={styles.bottomCard}>
+                        <Image source={require('../assets/Ignis.png')} style={styles.hydralize}/>
+                        <View style={[styles.verticalLine, !ignisPowerOn && {backgroundColor: '#e8e8e8'}]}/>
+            
+                        <View style={styles.infoContainer}>
+                        <View style={styles.infoRow}>
+                            <MaterialCommunityIcons name="signal-variant" size={20} color={ignisPowerOn ? "black" : "#cccccc"} />
+                            <Text style={[styles.textoconexao, !ignisPowerOn && styles.disabledText]}>Conectado</Text>
+                        </View>
+            
+                        <View style={styles.infoRow}>
+                            <MaterialIcons name="place" size={20} color={ignisPowerOn ? "black" : "#cccccc"} />
+                            <Text style={[styles.textoconexao, !ignisPowerOn && styles.disabledText]}>{device.location.at(0).toUpperCase() + device.location.slice(1)}</Text>
+                        </View>
+                        </View>
+                        <View>
+                        <Text style={[styles.textStatsAparelho, !ignisPowerOn && styles.disabledText]}>Status do ambiente:</Text>
+                        <Text style={[styles.textStats, !ignisPowerOn && styles.disabledText]}>{ignisPowerOn
+                            ? 'Seguro' : 'Desligado'}</Text>
+                        </View>
+                    </View>
+                    </TouchableOpacity>
+                    </View>
+            )
+        } else if (device.type == "hydralize") {
+            cards.push(
+                <View style={[styles.whitecard, !sefPowerOn && styles.disabledCard]}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Sef")}>
+                          <View style={styles.topcard}>
+                            <View style={styles.rowtopcard}>
+                              <MaterialCommunityIcons
+                                name="water"
+                                size={24}
+                                color={sefPowerOn ? "#0077BE" : "#cccccc"}
+                              />
+                              <Text
+                                style={[
+                                  styles.nomedispositivo,
+                                  !sefPowerOn && styles.disabledText,
+                                ]}
+                              >
+                                {device.name}
+                              </Text>
+                            </View>
+                            <TouchableOpacity
+                              onPress={(e) => {
+                                e.stopPropagation();
+                                toggleSefPower();
+                              }}
+                            >
+                              <View
+                                style={[
+                                  styles.powerButton,
+                                  !sefPowerOn && styles.powerButtonOff,
+                                ]}
+                              >
+                                <MaterialCommunityIcons
+                                  name="power"
+                                  size={18}
+                                  color={sefPowerOn ? "#006ED3" : "#cccccc"}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                
+                          <View style={styles.bottomCard}>
+                            <Image
+                              source={require("../assets/hydralize.png")}
+                              style={styles.hydralize}
+                            />
+                            <View
+                              style={[
+                                styles.verticalLine,
+                                !sefPowerOn && { backgroundColor: "#e8e8e8" },
+                              ]}
+                            />
+                            <View style={styles.infoContainer}>
+                              <View style={styles.infoRow}>
+                                <MaterialCommunityIcons
+                                  name="signal-variant"
+                                  size={20}
+                                  color={sefPowerOn ? "black" : "#cccccc"}
+                                />
+                                <Text
+                                  style={[
+                                    styles.textoconexao,
+                                    !sefPowerOn && styles.disabledText,
+                                  ]}
+                                >
+                                  Conectado
+                                </Text>
+                              </View>
+                
+                              <View style={styles.infoRow}>
+                                <MaterialIcons
+                                  name="place"
+                                  size={20}
+                                  color={sefPowerOn ? "black" : "#cccccc"}
+                                />
+                                <Text
+                                  style={[
+                                    styles.textoconexao,
+                                    !sefPowerOn && styles.disabledText,
+                                  ]}
+                                >
+                                  {device.location.at(0).toUpperCase() + device.location.slice(1)}
+                                </Text>
+                              </View>
+                            </View>
+                            <View>
+                              <Text
+                                style={[
+                                  styles.textStatsAparelho,
+                                  !sefPowerOn && styles.disabledText,
+                                ]}
+                              >
+                                Status do aparelho:
+                              </Text>
+                              <Text
+                                style={[styles.textStats, !sefPowerOn && styles.disabledText]}
+                              >
+                                {sefPowerOn ? "Ligado" : "Desligado"}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+            )
+        }
+    })
+
+    return cards;
+  }
 
   useEffect(() => {
     const load = async () => {
       try {
         // console.log("[HomeScreen] effect start");
         const token = await TokenService.getToken();
-        console.log(token);
-        /* console.log(token);
-        console.log(token);
-        const devices = await getDevices(token);
-        console.log("[HomeScreen] devices:", devices); */
-        
-/*         if (devices && devices.user && devices.user.name) {
-          setUserName(devices.user.name);
-        } else {
-          setUserName("Visitante");
-        } */
+        const devicesJson = await getDevices(token);
+        console.log("[HomeScreen] devices:", devicesJson);
+
+        setUserName(devicesJson.user.name);
+        setDeviceCards(loadCards(devicesJson.devices))
 
         // O CLIENTE WEBSOCKET INICIALIZA GLOBALMENTE
         const wsClient = initWebSocket(ENV.WS_SERVER, token);
@@ -113,7 +262,7 @@ export default function HomeScreen({ navigation }) {
 
       <Text style={styles.tituloconteudo}>Dispositivos</Text>
 
-      <View style={[styles.whitecard, !sefPowerOn && styles.disabledCard]}>
+      {/* <View style={[styles.whitecard, !sefPowerOn && styles.disabledCard]}>
         <TouchableOpacity onPress={() => navigation.navigate("Sef")}>
           <View style={styles.topcard}>
             <View style={styles.rowtopcard}>
@@ -311,7 +460,8 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
+      {deviceCards}
 
       <Image
         source={require("../assets/relax.png")}
