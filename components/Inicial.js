@@ -44,7 +44,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Feather name="arrow-right" size={16} color="white" />
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.signupButton}
           onPress={() =>
             navigation.navigate("MainTabs", {
@@ -56,7 +56,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Ionicons name="person-add" size={20} color="white" />
           <Text style={styles.signupButtonText}>Iniciar como Visitante</Text>
           <Feather name="arrow-right" size={16} color="white" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity onPress={() => navigation.navigate("Privacidade")}>
           <Text style={styles.politica}>Políticas de Privacidade</Text>
