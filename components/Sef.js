@@ -48,7 +48,7 @@ export default function HomeScreen() {
   // dados atualizados em tempo real
 
   const [waterInputData, setWaterInputData] = useState(0);
-  const [batteryInputData, setBatteryInputData] = useState(0);
+  const [batteryInputData, setBatteryInputData] = useState(10);
   const [hasCloro, setHasCloro] = useState(false);
   const [hasWater, setHasWater] = useState(false);
   const [currentEnergy, setCurrentEnergy] = useState(0);
@@ -60,11 +60,12 @@ export default function HomeScreen() {
   useEffect(() => {
     function handleUpdate(data) {
       const body = JSON.parse(data);
-      if (body.battery == 0) {
+/*       if (body.battery == 0) {
         setBatteryInputData(getRandomNumber(20, 100));
       } else {
         setBatteryInputData(body.battery);
-      }
+      } */
+      setBatteryInputData(10);
       setHasCloro(body.hasCloro || 1);
 
       setWaterIn(body.waterIn || 2);
