@@ -3,7 +3,6 @@
 
 import { API_ADDRESS, WS_SERVER } from "@env";
  */
- */
 let ENV = null;
 
 /* const envSchema = z.object({
