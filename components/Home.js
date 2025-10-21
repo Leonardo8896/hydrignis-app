@@ -18,6 +18,13 @@ import TokenService from "../services/token";
 import { getDevices } from "../services/devices";
 import { initWebSocket } from "../hooks/websocket";
 import { ENV } from "../env";
+import eventBus from "../events";
+import { set } from "zod";
+
+function snExists(sn, devices) {
+  // console.log(devices.some((device) => device.serial_number === sn) ? "true":"false");
+  return devices.some((device) => device.serial_number == sn);
+}
 
 export default function HomeScreen({ navigation }) {
   console.log(ENV);
@@ -25,15 +32,18 @@ export default function HomeScreen({ navigation }) {
   const [ignisPowerOn, setIgnisPowerOn] = useState(true);
   const [userName, setUserName] = useState("Carregando...");
   const [deviceCards, setDeviceCards] = useState();
+  const [devicesState, setDevicesState] = useState([]);
+  const [devicesLoaded, setDevicesLoaded] = useState([]);
 
   const loadCards = (devices) => {
     const cards = []
 
     devices.forEach(device => {
+      // console.log("LJSDBDBJKDSBJSV; " + device)
         if (device["type"] === "igniszero") {
             cards.push(
-                <View style={[styles.whitecard, !ignisPowerOn && styles.disabledCard]}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Ignis', {serial_number: device["serial_number"]})}>
+                <View style={[styles.whitecard, !snExists(device.serial_number, devicesState) && styles.disabledCard]}>
+                    <TouchableOpacity onPress={() =>  snExists(device.serial_number, devicesState) && navigation.navigate('Ignis', {serial_number: device["serial_number"]})}>
                     <View style={styles.topcard}>
                         <View style={styles.rowtopcard}>
                         <MaterialCommunityIcons name="fire" size={24} color={ignisPowerOn ? "#AD2831" : "#cccccc"} />
@@ -53,7 +63,7 @@ export default function HomeScreen({ navigation }) {
                         <View style={styles.infoContainer}>
                         <View style={styles.infoRow}>
                             <MaterialCommunityIcons name="signal-variant" size={20} color={ignisPowerOn ? "black" : "#cccccc"} />
-                            <Text style={[styles.textoconexao, !ignisPowerOn && styles.disabledText]}>Conectado</Text>
+                            <Text style={[styles.textoconexao, !ignisPowerOn && styles.disabledText]}>{snExists(device.serial_number, devicesState)?"Conectado":"Desconectado"}</Text>
                         </View>
             
                         <View style={styles.infoRow}>
@@ -61,19 +71,19 @@ export default function HomeScreen({ navigation }) {
                             <Text style={[styles.textoconexao, !ignisPowerOn && styles.disabledText]}>{device.location.at(0).toUpperCase() + device.location.slice(1)}</Text>
                         </View>
                         </View>
-                        <View>
+                        {/* <View>
                         <Text style={[styles.textStatsAparelho, !ignisPowerOn && styles.disabledText]}>Status do ambiente:</Text>
                         <Text style={[styles.textStats, !ignisPowerOn && styles.disabledText]}>{ignisPowerOn
                             ? 'Seguro' : 'Desligado'}</Text>
-                        </View>
+                        </View> */}
                     </View>
                     </TouchableOpacity>
                     </View>
             )
         } else if (device.type == "hydralize") {
             cards.push(
-                <View style={[styles.whitecard, !sefPowerOn && styles.disabledCard]}>
-                        <TouchableOpacity onPress={() => navigation.navigate("Sef")}>
+                <View style={[styles.whitecard, !snExists(device.serial_number, devicesState) && styles.disabledCard]}>
+                        <TouchableOpacity onPress={() => snExists(device.serial_number, devicesState) && navigation.navigate('Sef', {serial_number: device["serial_number"]})}>
                           <View style={styles.topcard}>
                             <View style={styles.rowtopcard}>
                               <MaterialCommunityIcons
@@ -135,7 +145,7 @@ export default function HomeScreen({ navigation }) {
                                     !sefPowerOn && styles.disabledText,
                                   ]}
                                 >
-                                  Conectado
+                                  {snExists(device.serial_number, devicesState)?"Conectado":"Desconectado"}
                                 </Text>
                               </View>
                 
@@ -155,7 +165,7 @@ export default function HomeScreen({ navigation }) {
                                 </Text>
                               </View>
                             </View>
-                            <View>
+                            {/* <View>
                               <Text
                                 style={[
                                   styles.textStatsAparelho,
@@ -169,7 +179,7 @@ export default function HomeScreen({ navigation }) {
                               >
                                 {sefPowerOn ? "Ligado" : "Desligado"}
                               </Text>
-                            </View>
+                            </View> */}
                           </View>
                         </TouchableOpacity>
                       </View>
@@ -189,6 +199,7 @@ export default function HomeScreen({ navigation }) {
         console.log("[HomeScreen] devices:", devicesJson);
 
         setUserName(devicesJson.user.name);
+        setDevicesLoaded(devicesJson.devices)
         setDeviceCards(loadCards(devicesJson.devices))
 
         // O CLIENTE WEBSOCKET INICIALIZA GLOBALMENTE
@@ -200,7 +211,23 @@ export default function HomeScreen({ navigation }) {
     };
 
     load(); // <-- CHAMA A FUNÇÃO
+
+    function handleDeviceUpdate(updatedDevices) {
+      setDevicesState(updatedDevices.devices);
+
+      // console.log("Dispositivos atualizados recebidos no HomeScreen:", updatedDevices.devices);
+    }
+
+    eventBus.on("connected_devices", handleDeviceUpdate);
   }, []);
+
+  useEffect(()=>{
+    console.log("teste: ")
+    devicesLoaded.forEach((device, index) => {
+      console.log(`Device ${index}:`, device);
+    });
+    setDeviceCards(loadCards(devicesLoaded))
+  }, [devicesState])
 
   const toggleSefPower = () => {
     setSefPowerOn(!sefPowerOn);
