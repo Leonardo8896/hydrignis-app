@@ -49,11 +49,6 @@ export default function HomeScreen({ navigation }) {
                         <MaterialCommunityIcons name="fire" size={24} color={ignisPowerOn ? "#AD2831" : "#cccccc"} />
                         <Text style={[styles.nomedispositivo, !ignisPowerOn && styles.disabledText]}>{device.name}</Text>
                         </View>
-                        <TouchableOpacity onPress={toggleIgnisPower}>
-                        <View style={[styles.powerButton, !ignisPowerOn && styles.powerButtonOff]}>
-                            <MaterialCommunityIcons name="power" size={18} color={ignisPowerOn ? "#006ED3" : "#cccccc"} />
-                        </View>
-                        </TouchableOpacity>
                     </View>
             
                     <View style={styles.bottomCard}>
@@ -100,25 +95,7 @@ export default function HomeScreen({ navigation }) {
                                 {device.name}
                               </Text>
                             </View>
-                            <TouchableOpacity
-                              onPress={(e) => {
-                                e.stopPropagation();
-                                toggleSefPower();
-                              }}
-                            >
-                              <View
-                                style={[
-                                  styles.powerButton,
-                                  !sefPowerOn && styles.powerButtonOff,
-                                ]}
-                              >
-                                <MaterialCommunityIcons
-                                  name="power"
-                                  size={18}
-                                  color={sefPowerOn ? "#006ED3" : "#cccccc"}
-                                />
-                              </View>
-                            </TouchableOpacity>
+                            
                           </View>
                 
                           <View style={styles.bottomCard}>
