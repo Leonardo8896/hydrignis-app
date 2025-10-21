@@ -36,12 +36,15 @@ function initWebSocket(url, auth_token) {
     const body = parseJsonString(event.data);
     if (!body) return;
 
-    if (body.Camera === undefined) {
+    if (body.event === "hydralize_playload") {
       console.log("Recebido evento HYDRALIZE");
-      eventBus.emit("hydralize", event.data);
-    } else {
+      eventBus.emit("hydralize", body.data);
+    } else if (body.event === "igniszero_playload") {
       console.log("Recebido evento IGNIS");
-      eventBus.emit("ignis", event.data);
+      eventBus.emit("ignis", body.data);
+    } else if (body.event === "connected_devices") {
+      console.log(body.data);
+      eventBus.emit("connected_devices", body.data);
     }
   };
 
