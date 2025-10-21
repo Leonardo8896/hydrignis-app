@@ -27,6 +27,7 @@ import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
 import { LineChart, Grid, XAxis, AreaChart } from "react-native-svg-charts";
 import eventBus from "../events";
 import WaterProgress from "./graphics/percent";
+import { useRoute } from "@react-navigation/native";
 
 function getRandomNumber(min = 0, max = 100) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -41,6 +42,8 @@ function waterBox(text, iconName) {
 }
 
 export default function HomeScreen() {
+  const route = useRoute();
+  const params = route.params
   const [showBattery, setShowBattery] = useState(true);
   const [showWater, setShowWater] = useState(true);
   const [showEnergy, setShowEnergy] = useState(true);
@@ -60,12 +63,15 @@ export default function HomeScreen() {
   useEffect(() => {
     function handleUpdate(data) {
       const body = JSON.parse(data);
-/*       if (body.battery == 0) {
+      if (params.serial_number != body.serial_number) {
+        return;
+      }
+       if (body.battery == 0) {
         setBatteryInputData(getRandomNumber(20, 100));
       } else {
         setBatteryInputData(body.battery);
-      } */
-      setBatteryInputData(10);
+      }
+      // setBatteryInputData(10);
       setHasCloro(body.hasCloro || 1);
 
       setWaterIn(body.waterIn || 2);
