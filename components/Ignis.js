@@ -14,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import Entypo from "@expo/vector-icons/Entypo";
 import eventBus from "../events";
 import CameraView from "./CameraView";
+import { useRoute } from "@react-navigation/native";
 
 /**
  * Calcula o nível de segurança (%) de um ambiente
@@ -34,6 +35,9 @@ function calcSafetyPercent(ppm, dangerThreshold = 2000) {
 }
 
 const BarGraph = () => {
+  const route = useRoute();
+  const params = route.params
+  console.log(params)
   const [showGases, setShowGases] = useState(true);
   const [showCam, setShowCam] = useState(true);
 
@@ -47,9 +51,12 @@ const BarGraph = () => {
   useEffect(() => {
     function handleUpdate(data) {
       const body = JSON.parse(data);
+      if (params.serial_number != body.serial_number) {
+        return;
+      }
       setGasData(calcSafetyPercent(parseInt(body.Gas), 10000));
       setCameraViewData(body.Camera)
-      
+  
     }
     eventBus.on("ignis", handleUpdate);
     return () => {
