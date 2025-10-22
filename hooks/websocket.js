@@ -2,6 +2,11 @@
 import eventBus from "../events";
 
 let wsClient = null;
+let isReconnecting = false
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 function parseJsonString(jsonString) {
   try {
@@ -50,16 +55,31 @@ function initWebSocket(url, auth_token) {
 
   wsClient.onerror = (err) => {
     // Em RN, err.message pode não existir; logue o objeto inteiro também
-    console.error("❌ Erro WebSocket:", err?.message || err);
+    // console.error("❌ Erro WebSocket:", err?.message || err);
     console.log(err);
+    wsClient = null;
+    attemptReconnect(url, auth_token); // tenta reconectar
   };
 
   wsClient.onclose = () => {
     console.log("🔌 WebSocket fechado");
     wsClient = null; // libera para reconectar se precisar
+    attemptReconnect(url, auth_token);
   };
 
   return wsClient;
+}
+
+async function attemptReconnect(url, auth_token) {
+  if (isReconnecting) {
+    console.log("[WebSocket] Reconexão já em andamento; ignorando nova tentativa.");
+    return;
+  }
+
+  isReconnecting = true;
+  console.log("[WebSocket] Tentando reconectar em 2 segundos...");
+  await wait(2000); // Aguarda 2 segundos antes de tentar reconectar
+  initWebSocket(url, auth_token);
 }
 
 function getWsClient() {
