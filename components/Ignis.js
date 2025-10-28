@@ -50,12 +50,11 @@ const BarGraph = () => {
 
   useEffect(() => {
     function handleUpdate(data) {
-      const body = JSON.parse(data);
-      if (params.serial_number != body.serial_number) {
+      if (params.serial_number != data.serial_number) {
         return;
       }
-      setGasData(calcSafetyPercent(parseInt(body.Gas), 10000));
-      setCameraViewData(body.Camera)
+      setGasData(calcSafetyPercent(parseInt(data.Gas), 10000));
+      setCameraViewData(data.Camera)
   
     }
     eventBus.on("ignis", handleUpdate);
