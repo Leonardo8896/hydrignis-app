@@ -38,11 +38,12 @@ export default function HomeScreen({ navigation }) {
   const loadCards = (devices) => {
     const cards = []
 
+    let i = 0;
     devices.forEach(device => {
       // console.log("LJSDBDBJKDSBJSV; " + device)
         if (device["type"] === "igniszero") {
             cards.push(
-                <View style={[styles.whitecard, !snExists(device.serial_number, devicesState) && styles.disabledCard]}>
+                <View key={i} style={[styles.whitecard, !snExists(device.serial_number, devicesState) && styles.disabledCard]}>
                     <TouchableOpacity onPress={() =>  snExists(device.serial_number, devicesState) && navigation.navigate('Ignis', {serial_number: device["serial_number"]})}>
                     <View style={styles.topcard}>
                         <View style={styles.rowtopcard}>
@@ -77,7 +78,7 @@ export default function HomeScreen({ navigation }) {
             )
         } else if (device.type == "hydralize") {
             cards.push(
-                <View style={[styles.whitecard, !snExists(device.serial_number, devicesState) && styles.disabledCard]}>
+                <View key={1} style={[styles.whitecard, !snExists(device.serial_number, devicesState) && styles.disabledCard]}>
                         <TouchableOpacity onPress={() => snExists(device.serial_number, devicesState) && navigation.navigate('Sef', {serial_number: device["serial_number"]})}>
                           <View style={styles.topcard}>
                             <View style={styles.rowtopcard}>
@@ -162,6 +163,7 @@ export default function HomeScreen({ navigation }) {
                       </View>
             )
         }
+        i++;
     })
 
     return cards;
