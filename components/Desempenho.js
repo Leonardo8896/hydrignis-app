@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Platform, StatusBar, Dimensions, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -6,11 +6,39 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
 import { LineChart, Grid, XAxis, AreaChart } from "react-native-svg-charts";
 import Feather from '@expo/vector-icons/Feather';
+import {getStatistics} from '../services/statistics';
+import { set } from 'zod';
 
 export default function PerformanceScreen() {
-  const data = [10, 30, 50, 75, 40, 30, 40, 38, 95, 70, 40, 55];
+  const [gasAlerts, setGasAlerts] = useState(0);
+  const [fireAlerts, setFireAlerts] = useState(0); 
+  const [data, setData] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  const [bars, setBars] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const Pontos = ({ x, y, data }) => (
+
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      const statistics = await getStatistics();
+      if (statistics) {
+        let tmp_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let tmp_bars = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        statistics.hydralize_statistics.forEach(stat => {
+          const monthIndex = new Date(stat.date).getMonth();
+          tmp_array[monthIndex] = stat.energy_production;
+          tmp_bars[monthIndex] = stat.water_production;
+        });
+
+        setData(tmp_array);
+        setBars(tmp_bars);
+      }
+    };
+
+    fetchStatistics();
+  }, []);
+
+
+  const Pontos = ({ x, y, data }) => (
     <G>
       {data.map((value, index) => (
         <Circle
@@ -26,7 +54,6 @@ export default function PerformanceScreen() {
     </G>
   );
 
-  const bars = [40, 50, 30, 60, 70, 20, 10, 80, 50, 70, 20, 40];
   const maxWidth = 103;
 
   return (
@@ -38,17 +65,17 @@ export default function PerformanceScreen() {
       <View style={styles.whitecard}>
         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-around'}}>
           <Feather name="check-circle" size={20} color="#68d391" />
-          <Text style={{fontFamily:'Inter-regular', fontSize:13, color:'#000000'}}>Todos os dispositivos estão bem conservados</Text>
+          <Text style={{fontFamily:'Inter-regular', fontSize:13, color:'#000000'}}>Checagem de alertas:                                                     </Text>
         </View>
       
         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
           <View style={styles.caixacinza}>
-            <Text style={{fontFamily:'Inter-regular', fontSize:13}}>Diagnósticos</Text>
+            <Text style={{fontFamily:'Inter-regular', fontSize:13}}>Gás</Text>
             <Text style={{fontFamily:'Inter-regular', fontSize:13, color:'#A2A2A2'}}>0</Text>
           </View>
 
           <View style={styles.caixacinza}>
-            <Text style={{fontFamily:'Inter-regular', fontSize:13}}>Alertas</Text>
+            <Text style={{fontFamily:'Inter-regular', fontSize:13}}>Fogo</Text>
             <Text style={{fontFamily:'Inter-regular', fontSize:13, color:'#A2A2A2'}}>0</Text>
           </View>
         </View>
